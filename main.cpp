@@ -10,6 +10,8 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow)
 {
+    onMain(hInstance);
+
     // Register the window class.
     const wchar_t CLASS_NAME[] = L"MazeGame";
 
@@ -26,7 +28,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
     HWND hwnd = CreateWindowEx(
         0,                              // Optional window styles.
         CLASS_NAME,                     // Window class
-        L"MazeGame",    // Window text
+        L"Maze Game",    // Window text
         WS_OVERLAPPEDWINDOW,            // Window style
 
         // Size and position
@@ -63,23 +65,18 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
     {
     case WM_CREATE:
         onWindowCreate(hwnd);
+        break;
     case WM_TIMER:
         onTimer(hwnd);
+        break;
     case WM_DESTROY:
         PostQuitMessage(0);
         return 0;
-
     case WM_PAINT:
-    {
         PAINTSTRUCT ps;
         HDC hdc = BeginPaint(hwnd, &ps);
-
-        // All painting occurs here, between BeginPaint and EndPaint.
-
-        FillRect(hdc, &ps.rcPaint, (HBRUSH)(COLOR_WINDOW + 1));
-
+        onPaint(hwnd, &hdc);
         EndPaint(hwnd, &ps);
-    }
     return 0;
 
     }

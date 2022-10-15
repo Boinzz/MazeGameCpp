@@ -21,10 +21,38 @@
     <ClCompile Include="game_logic_base.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="game_objects.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="game_logic_middle.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="game_logic_base.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="game_objects.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="game_logic_middle.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="windef.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="MazeGameCpp.rc">
+      <Filter>资源文件</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="testPlayer.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
   </ItemGroup>
 </Project>

@@ -78,7 +78,7 @@
       <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
@@ -128,10 +128,22 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="game_logic_base.cpp" />
+    <ClCompile Include="game_objects.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="game_logic_middle.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="game_logic_base.h" />
+    <ClInclude Include="game_objects.h" />
+    <ClInclude Include="game_logic_middle.h" />
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="windef.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="MazeGameCpp.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="testPlayer.bmp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
