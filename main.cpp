@@ -1,6 +1,6 @@
 #ifndef UNICODE
 #define UNICODE
-#endif 
+#endif
 
 #include <windows.h>
 
@@ -75,7 +75,7 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
     case WM_PAINT:
         PAINTSTRUCT ps;
         HDC hdc = BeginPaint(hwnd, &ps);
-        onPaint(hwnd, &hdc);
+        onPaint(hwnd, hdc);
         EndPaint(hwnd, &ps);
     return 0;
 

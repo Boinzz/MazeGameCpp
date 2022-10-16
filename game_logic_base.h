@@ -8,7 +8,7 @@ void onWindowCreate(Window window);
 
 void onTimer(Window window);
 
-void onPaint(Window window, PaintDevice *device);
+void onPaint(Window window, PaintDevice device);
 
 Bitmap loadBitmap(const String fileName, int width, int height);
 

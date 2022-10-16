@@ -25,9 +25,9 @@ Bitmap loadBitmap(const String fileName, int width, int height)
 	return (Bitmap)LoadImage(instance, fileName, IMAGE_BITMAP, width, height, LR_LOADFROMFILE);
 }
 
-void unloadBitmap(Bitmap *bitmap)
+void unloadBitmap(Bitmap bitmap)
 {
-	DeleteObject(*bitmap);
+	DeleteObject(bitmap);
 }
 
 void onTimer(Window window)
@@ -36,14 +36,14 @@ void onTimer(Window window)
 	InvalidateRect(window, &rect, TRUE);
 }
 
-void onPaint(Window window, PaintDevice *device)
+void onPaint(Window window, PaintDevice device)
 {
-	PaintDevice canvas = CreateCompatibleDC(*device);
-	HBITMAP bmp = CreateCompatibleBitmap(*device, WINDOW_WIDTH, WINDOW_HEIGHT);
+	PaintDevice canvas = CreateCompatibleDC(device);
+	Bitmap bmp = CreateCompatibleBitmap(device, WINDOW_WIDTH, WINDOW_HEIGHT);
 	SelectObject(canvas, bmp);
 	RECT wholeRect = { 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT };
 	FillRect(canvas, &wholeRect, CreateSolidBrush(RGB(0x80, 0x80, 0x80)));
 	renderGameObjects(canvas);
-	BitBlt(*device, 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT, canvas, 0, 0, SRCCOPY);
+	BitBlt(device, 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT, canvas, 0, 0, SRCCOPY);
 	DeleteDC(canvas);
 }
