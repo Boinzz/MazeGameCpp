@@ -27,6 +27,12 @@
     <ClCompile Include="game_logic_middle.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="game_logic_top.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="avl_tree.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="game_logic_base.h">
@@ -42,6 +48,12 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="resource.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="game_logic_top.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="avl_tree.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
