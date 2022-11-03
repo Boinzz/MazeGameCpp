@@ -33,6 +33,12 @@
     <ClCompile Include="avl_tree.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="wfc.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="infinite_wfc.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="game_logic_base.h">
@@ -47,24 +53,17 @@
     <ClInclude Include="windef.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="resource.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="game_logic_top.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="avl_tree.h">
       <Filter>头文件</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="MazeGameCpp.rc">
-      <Filter>资源文件</Filter>
-    </ResourceCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="testPlayer.bmp">
-      <Filter>资源文件</Filter>
-    </Image>
+    <ClInclude Include="wfc.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="infinite_wfc.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

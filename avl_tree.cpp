@@ -157,9 +157,7 @@ AVLTreeNode* insert(AVLTreeNode* tree, uint key, void* value)
 
 void insert(AVLTree* self, uint key, void* value)
 {
-    AVLTreeNode* node = insert(self->mRoot, key, value);
-    if (self->mRoot == nullptr)
-        self->mRoot = node;
+    self->mRoot = insert(self->mRoot, key, value);
 }
 
 AVLTreeNode* remove(AVLTreeNode* tree, AVLTreeNode* z)

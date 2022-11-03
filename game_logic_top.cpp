@@ -2,6 +2,8 @@
 #include "game_logic_base.h"
 #include "game_logic_middle.h"
 #include "avl_tree.h"
+#include "infinite_wfc.h"
+#include <math.h>
 
 
 static int currentDefId = 0;
@@ -100,6 +102,22 @@ GameObjectDef initGround()
 	return out;
 }
 
+GameObjectDef initTower()
+{
+	GameObjectDef out;
+	out.id = currentDefId;
+	currentDefId++;
+	out.height = 64;
+	out.width = 64;
+	out.frameCount = 1;
+	out.frameLengths = new int[1];
+	out.frameLengths[0] = 0x7fffffff;
+	out.frames = new Bitmap[1];
+	out.frames[0] = loadBitmap(L"./tower/tower.bmp", 64, 64);
+
+	return out;
+}
+
 GameObject* createPlayer()
 {
 	Player* out = (Player*)malloc(sizeof Player);
@@ -136,10 +154,10 @@ GameObject* createEnemy(int posX, int posY, int hp, int mapId)
 	out->moveStatus = MV_STILL;
 	out->currentFrame = 5;
 	out->nextFrame = 4;
-	out->speed = 8;
+	out->speed = 4;
 	out->tick = 0;
 	out->toBeDestroyed = false;
-	out->targetId = GAME_INSTANCE.player->id;
+	out->targetId = GAME_INSTANCE.towers[rand() % 4]->id;
 
 	return (GameObject*)out;
 }
@@ -169,6 +187,25 @@ GameObject* createTile(int posX, int posY, bool isWall)
 	return (GameObject*)out;
 }
 
+GameObject* createTower(int posX, int posY)
+{
+	Tower* out = (Tower*)malloc(sizeof Tower);
+
+	out->id = currentObjId;
+	currentObjId++;
+	out->def = &objDefList.tower;
+	out->currentFrame = 0;
+	out->nextFrame = 0;
+	out->posX = posX;
+	out->posY = posY;
+	out->tick = 0;
+	out->hp = 1000;
+	out->level = 0;
+	out->toBeDestroyed = false;
+
+	return (GameObject*)out;
+}
+
 void initMap()
 {
 	GAME_INSTANCE.ground.bulletsHead = nullptr;
@@ -191,9 +228,9 @@ void initMap()
 void createGround()
 {
 	GameObject* tile;
-	for (int i = -24 * 64; i < 25 * 64; i += 64)
+	for (int i = -14 * 64; i < 15 * 64; i += 64)
 	{
-		for (int j = -24 * 64; j < 25 * 64; j += 64)
+		for (int j = -14 * 64; j < 15 * 64; j += 64)
 		{
 			tile = createTile(i, j, false);
 			addToMap(&GAME_INSTANCE.ground, tile, TILE);
@@ -201,6 +238,34 @@ void createGround()
 			insert(GAME_INSTANCE.ground.tilesMap, index, (void*)tile);
 		}
 	}
+}
+
+void createUnderground()
+{
+	allBlocks = createTree();
+	genBlock(0, 0);
+}
+
+void infiniteGenMap(int x, int y)
+{
+	int x1 = x >> 6;
+	int y1 = y >> 6;
+	int x2 = x1 / 24;
+	int y2 = y1 / 24;
+	if (x1 < 0 && x1 % 24 != 0)
+		x2--;
+	if (y1 < 0 && y1 % 24 != 0)
+		y2--;
+
+	genBlock(x2, y2);
+	genBlock(x2 - 1, y2);
+	genBlock(x2, y2 - 1);
+	genBlock(x2 + 1, y2);
+	genBlock(x2, y2 + 1);
+	genBlock(x2 - 1, y2 - 1);
+	genBlock(x2 - 1, y2 + 1);
+	genBlock(x2 + 1, y2 - 1);
+	genBlock(x2 + 1, y2 + 1);
 }
 
 void addToMap(Map* map, GameObject* obj, ObjType type)
@@ -254,35 +319,63 @@ void removeFromMap(GameObject* obj)
 	obj->toBeDestroyed = true;
 }
 
-void moveLogic(Destroyable* obj, int velX, int velY)
+bool moveLogic(Destroyable* obj, int velX, int velY)
 {
 	if (velX == 0 && velY == 0)
-		return;
+		return true;
 
-	int targetX = obj->posX + velX;
-	int targetY = obj->posY + velY;
+	int centerX = obj->posX + obj->def->width / 2;
+	int centerY = obj->posY + obj->def->height / 2;
+
+	int targetX = centerX + velX;
+	int targetY = centerY + velY;
 	Map* map;
 	if (obj->mapId == 0)
 		map = &GAME_INSTANCE.ground;
 	else
 		map = &GAME_INSTANCE.underground;
-	/*
+
 	int index = ((targetX >> 6) & 0xffff) + ((targetY >> 6) << 16);
 	AVLTreeNode *node = search(map->tilesMap, index);
 	if (node == nullptr)
-		return;
+	{
+		if (velX == 0 || velY == 0)
+			return false;
+		else
+		{
+			bool test1 = moveLogic(obj, velX, 0);
+			if (test1)
+				return true;
+			return moveLogic(obj, 0, velY);
+		}
+	}
 
 	MapTile* tile = (MapTile*)node->value;
 	if (!tile->walkable)
-		return;
-	*/
-	obj->posX = targetX;
-	obj->posY = targetY;
+	{
+		if (velX == 0 || velY == 0)
+			return false;
+		else
+		{
+			bool test1 = moveLogic(obj, velX, 0);
+			if (test1)
+				return true;
+			return moveLogic(obj, 0, velY);
+		}
+	}
+
+	obj->posX += velX;
+	obj->posY += velY;
+	return true;
 }
 
 void playerLogic()
 {
 	Player* player = GAME_INSTANCE.player;
+
+	if (player->mapId == 1)
+		infiniteGenMap(player->posX, player->posY);
+
 	int frame = player->currentFrame;
 	int nextFrame = player->nextFrame;
 	
@@ -421,6 +514,66 @@ void enemyLogic(Enemy* enemy)
 			enemy->currentFrame = 6;
 			enemy->nextFrame = 7;
 		}
+	}
+
+	if (enemy->tick % 10 == 0)
+	{
+		for (int i = 0; i < 4; i++)
+		{
+			int deltaX = enemy->posX - GAME_INSTANCE.towers[i]->posX;
+			int deltaY = enemy->posY - GAME_INSTANCE.towers[i]->posY;
+			int deltaS = sqrt(deltaX * deltaX + deltaY * deltaY);
+			if (deltaS < 64)
+				GAME_INSTANCE.towers[i]->hp -= 5;
+		}
+
+		int deltaX = enemy->posX - GAME_INSTANCE.player->posX;
+		int deltaY = enemy->posY - GAME_INSTANCE.player->posY;
+		int deltaS = sqrt(deltaX * deltaX + deltaY * deltaY);
+		if (deltaS < 64)
+			GAME_INSTANCE.player->hp -= 5;
+	}
+
+	if (enemy->hp <= 0)
+		enemy->toBeDestroyed = true;
+
+	if (enemy->mapId == 0)
+	{
+		Tower* target = nullptr;
+		for (int i = 0; i < 4; i++)
+			if (GAME_INSTANCE.towers[i]->id == enemy->targetId)
+				target = GAME_INSTANCE.towers[i];
+
+		int deltaX = target->posX - enemy->posX;
+		int deltaY = target->posY - enemy->posY;
+		if (deltaX > -64 && deltaX < 64)
+			deltaX = 0;
+		if (deltaY > -64 && deltaY < 64)
+			deltaY = 0;
+
+		int deltaS = sqrt(deltaX * deltaX + deltaY * deltaY);
+		if (deltaS == 0)
+		{
+			enemy->moveStatus = MV_STILL;
+			return;
+		}
+		int velX = enemy->speed * deltaX / deltaS;
+		int velY = enemy->speed * deltaY / deltaS;
+		moveLogic((Destroyable*)enemy, velX, velY);
+
+		int absDeltaX = deltaX > 0 ? deltaX : -deltaX;
+		int absDeltaY = deltaY > 0 ? deltaY : -deltaY;
+
+		if (deltaX > 0 && deltaX >= absDeltaY)
+			enemy->moveStatus = MV_RIGHT;
+		else if (deltaX < 0 && deltaX <= -absDeltaY)
+			enemy->moveStatus = MV_LEFT;
+		else if (deltaY > 0 && deltaY > absDeltaX)
+			enemy->moveStatus = MV_DOWN;
+		else if (deltaY < 0 && deltaY < -absDeltaX)
+			enemy->moveStatus = MV_UP;
+		else
+			enemy->moveStatus = MV_STILL;
 	}
 }
 

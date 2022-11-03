@@ -1,6 +1,5 @@
 #include "game_logic_base.h"
 #include "game_logic_middle.h"
-#include "resource.h"
 
 #define TIMER_ID 1
 #define FPS 60

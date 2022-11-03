@@ -131,6 +131,7 @@ struct Game
 	Map underground;
 	bool playerOnGround;
 	Player* player;
+	Tower** towers;
 };
 
 extern Game GAME_INSTANCE;

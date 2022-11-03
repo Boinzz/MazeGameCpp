@@ -3,6 +3,7 @@
 #endif
 
 #include <windows.h>
+#include <time.h>
 
 #include "game_logic_base.h"
 
@@ -10,6 +11,7 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow)
 {
+    srand(time(0));
     onMain(hInstance);
 
     // Register the window class.

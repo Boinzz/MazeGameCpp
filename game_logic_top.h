@@ -10,18 +10,23 @@ GameObjectDef initPlayer();
 GameObjectDef initEnemy();
 GameObjectDef initWall();
 GameObjectDef initGround();
+GameObjectDef initTower();
 
 GameObject *createPlayer();
 GameObject *createEnemy(int posX, int posY, int hp, int mapId);
 GameObject* createTile(int posX, int posY, bool isWall);
+GameObject* createTower(int posX, int posY);
 
 void initMap();
 
 void createGround();
+void createUnderground();
+void infiniteGenMap(int x, int y);
 
 void addToMap(Map* map, GameObject* obj, ObjType type);
 void removeFromMap(GameObject* obj);
 
-void moveLogic(Destroyable* obj, int speedX, int speedY);
+bool moveLogic(Destroyable* obj, int speedX, int speedY);
 void playerLogic();
 void enemyLogic(Enemy* enemy);
+
