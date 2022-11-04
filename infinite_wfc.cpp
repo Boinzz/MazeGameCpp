@@ -46,7 +46,7 @@ void genConstraint(BlockMap* from, BlockMap* to, uint direction)
 	}
 }
 
-void genBlock(int x, int y)
+void genBlock(int x, int y, bool isFirst)
 {
 	AVLTreeNode* result = search(allBlocks, (x & 0xffff) + (y << 16));
 	if (result != nullptr)
@@ -71,10 +71,10 @@ void genBlock(int x, int y)
 	collapseAll(out->blocks);
 
 	insert(allBlocks, (x & 0xffff) + (y << 16), (void*)out);
-	genMap(x, y, out);
+	genMap(x, y, out, isFirst);
 }
 
-void genMap(int x, int y, BlockMap* blockMap)
+void genMap(int x, int y, BlockMap* blockMap, bool isFirst)
 {
 	int actualX;
 	int actualY;
@@ -86,6 +86,48 @@ void genMap(int x, int y, BlockMap* blockMap)
 		{
 			actualX = (x * 8 + i) * 192;
 			actualY = (y * 8 + j) * 192;
+
+			if (isFirst && i == 0 && j == 0)
+			{
+				tile = createGate();
+				insert(GAME_INSTANCE.underground.tilesMap, ((actualX / 64) & 0xffff) + ((actualY / 64) << 16), (void*)tile);
+				addToMap(&GAME_INSTANCE.underground, tile, TILE);
+
+				tile = createTile(actualX, actualY + 64, false);
+				insert(GAME_INSTANCE.underground.tilesMap, ((actualX / 64) & 0xffff) + ((actualY / 64 + 1) << 16), (void*)tile);
+				addToMap(&GAME_INSTANCE.underground, tile, TILE);
+
+				tile = createTile(actualX, actualY + 128, false);
+				insert(GAME_INSTANCE.underground.tilesMap, ((actualX / 64) & 0xffff) + ((actualY / 64 + 2) << 16), (void*)tile);
+				addToMap(&GAME_INSTANCE.underground, tile, TILE);
+
+				tile = createTile(actualX + 64, actualY, false);
+				insert(GAME_INSTANCE.underground.tilesMap, ((actualX / 64 + 1) & 0xffff) + ((actualY / 64) << 16), (void*)tile);
+				addToMap(&GAME_INSTANCE.underground, tile, TILE);
+
+				tile = createTile(actualX + 64, actualY + 64, false);
+				insert(GAME_INSTANCE.underground.tilesMap, ((actualX / 64 + 1) & 0xffff) + ((actualY / 64 + 1) << 16), (void*)tile);
+				addToMap(&GAME_INSTANCE.underground, tile, TILE);
+
+				tile = createTile(actualX + 64, actualY + 128, false);
+				insert(GAME_INSTANCE.underground.tilesMap, ((actualX / 64 + 1) & 0xffff) + ((actualY / 64 + 2) << 16), (void*)tile);
+				addToMap(&GAME_INSTANCE.underground, tile, TILE);
+
+				tile = createTile(actualX + 128, actualY, false);
+				insert(GAME_INSTANCE.underground.tilesMap, ((actualX / 64 + 2) & 0xffff) + ((actualY / 64) << 16), (void*)tile);
+				addToMap(&GAME_INSTANCE.underground, tile, TILE);
+
+				tile = createTile(actualX + 128, actualY + 64, false);
+				insert(GAME_INSTANCE.underground.tilesMap, ((actualX / 64 + 2) & 0xffff) + ((actualY / 64 + 1) << 16), (void*)tile);
+				addToMap(&GAME_INSTANCE.underground, tile, TILE);
+
+				tile = createTile(actualX + 128, actualY + 128, false);
+				insert(GAME_INSTANCE.underground.tilesMap, ((actualX / 64 + 2) & 0xffff) + ((actualY / 64 + 2) << 16), (void*)tile);
+				addToMap(&GAME_INSTANCE.underground, tile, TILE);
+
+				continue;
+			}
+
 			switch (blockMap->blocks[i][j].id)
 			{
 			case 0x0:
@@ -124,6 +166,17 @@ void genMap(int x, int y, BlockMap* blockMap)
 				tile = createTile(actualX + 128, actualY + 128, false);
 				insert(GAME_INSTANCE.underground.tilesMap, ((actualX / 64 + 2) & 0xffff) + ((actualY / 64 + 2) << 16), (void*)tile);
 				addToMap(&GAME_INSTANCE.underground, tile, TILE);
+
+				if (rand() % 6 < 2)
+				{
+					GameObject *enemy = createEnemy(actualX + 64, actualY + 64, 5000, 1);
+					addToMap(&GAME_INSTANCE.underground, enemy, DESTROYABLE);
+				}
+				if (rand() % 6 < 1)
+				{
+					GameObject* coin = createCoin(actualX + 64, actualY + 64);
+					addToMap(&GAME_INSTANCE.underground, coin, DESTROYABLE);
+				}
 
 				break;
 			case 0x1:
