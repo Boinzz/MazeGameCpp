@@ -22,7 +22,7 @@ void onWindowCreate(Window window)
 
 Bitmap loadBitmap(const String fileName, int width, int height)
 {
-	return (Bitmap)LoadImage(instance, fileName, IMAGE_BITMAP, width, height, LR_LOADFROMFILE);
+	return (Bitmap)LoadImage(instance, fileName, IMAGE_BITMAP, width, height, LR_LOADFROMFILE | LR_CREATEDIBSECTION);
 }
 
 void unloadBitmap(Bitmap bitmap)

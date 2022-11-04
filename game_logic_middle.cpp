@@ -65,7 +65,7 @@ void renderGameObject(GameObject* obj, PaintDevice canvas)
 	PaintDevice bmpCanvas = CreateCompatibleDC(canvas);
 	Bitmap frame = obj->def->frames[obj->currentFrame];
 	SelectObject(bmpCanvas, frame);
-	//TODO: 计算下一帧应该为哪张图片
-	BitBlt(canvas, actualX, actualY, 64, 64, bmpCanvas, 0, 0, SRCCOPY);
+
+	AlphaBlend(canvas, actualX, actualY, 64, 64, bmpCanvas, 0, 0, 64, 64, {AC_SRC_OVER, 0, 0xff, AC_SRC_ALPHA});
 	DeleteDC(bmpCanvas);
 }

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Windows.h>
+#include <wingdi.h>
 
 typedef HWND Window;
 typedef HDC PaintDevice;
