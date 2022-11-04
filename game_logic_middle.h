@@ -8,6 +8,9 @@ struct ObjDefList {
 	GameObjectDef tower;
 	GameObjectDef wall;
 	GameObjectDef ground;
+	GameObjectDef bullet;
+	GameObjectDef gate;
+	GameObjectDef coin;
 };
 
 extern ObjDefList objDefList;
@@ -19,3 +22,5 @@ void renderGameObjects(PaintDevice canvas);
 void renderGameObject(GameObject* obj, PaintDevice canvas);
 
 void gameLogic();
+
+void mapLogic(Map* map);

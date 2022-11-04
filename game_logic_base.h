@@ -41,3 +41,5 @@ void onMouseDown(bool isLeft);
 void onMouseUp(bool isLeft);
 
 void onMouseMove(unsigned lParam);
+
+void paintText(PaintDevice device);

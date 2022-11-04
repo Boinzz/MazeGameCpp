@@ -88,8 +88,8 @@ struct Enemy
 };
 
 #define BULLET EXTENDS GAME_OBJECT      \
-float           velX;                   \
-float           velY;                   \
+double          velX;                   \
+double          velY;                   \
 int             damage;
 
 struct Bullet
@@ -132,6 +132,8 @@ struct Game
 	bool playerOnGround;
 	Player* player;
 	Tower** towers;
+	int globalTick;
+	int score;
 };
 
 extern Game GAME_INSTANCE;

@@ -11,5 +11,5 @@
 extern AVLTree* allBlocks;
 
 void genConstraint(BlockMap* from, BlockMap* to, uint direction);
-void genBlock(int x, int y);
-void genMap(int x, int y, BlockMap* blockMap);
+void genBlock(int x, int y, bool isFirst);
+void genMap(int x, int y, BlockMap* blockMap, bool isFirst);
