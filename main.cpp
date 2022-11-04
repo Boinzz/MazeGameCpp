@@ -3,6 +3,7 @@
 #endif
 
 #include <windows.h>
+#include <time.h>
 
 #include "game_logic_base.h"
 
@@ -10,6 +11,7 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow)
 {
+    srand(time(0));
     onMain(hInstance);
 
     // Register the window class.
@@ -20,7 +22,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
     wc.lpfnWndProc = WindowProc;
     wc.hInstance = hInstance;
     wc.lpszClassName = CLASS_NAME;
-
+       
     RegisterClass(&wc);
 
     // Create the window.
@@ -72,13 +74,33 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
     case WM_DESTROY:
         PostQuitMessage(0);
         return 0;
+    case WM_KEYDOWN:
+        onKeyDown(wParam);
+        return 0;
+    case WM_KEYUP:
+        onKeyUp(wParam);
+        return 0;
+    case WM_LBUTTONDOWN:
+        onMouseDown(true);
+        return 0;
+    case WM_LBUTTONUP:
+        onMouseUp(true);
+        return 0;
+    case WM_RBUTTONDOWN:
+        onMouseDown(false);
+        return 0;
+    case WM_RBUTTONUP:
+        onMouseUp(false);
+        return 0;
+    case WM_MOUSEMOVE:
+        onMouseMove(lParam);
+        return 0;
     case WM_PAINT:
         PAINTSTRUCT ps;
         HDC hdc = BeginPaint(hwnd, &ps);
         onPaint(hwnd, hdc);
         EndPaint(hwnd, &ps);
-    return 0;
-
+        return 0;
     }
     return DefWindowProc(hwnd, uMsg, wParam, lParam);
 }

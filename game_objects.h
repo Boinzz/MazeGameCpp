@@ -1,6 +1,9 @@
 #pragma once
 
 #include "windef.h"
+#include "avl_tree.h"
+
+#pragma pack (4)
 
 typedef int MoveStatus;
 
@@ -31,6 +34,8 @@ int             posX;                   \
 int             posY;                   \
 GameObjectDef*  def;                    \
 int             currentFrame;           \
+int             nextFrame;              \
+int             tick;                   \
 bool            toBeDestroyed;
 
 struct GameObject
@@ -111,9 +116,13 @@ typedef ListNode* List;
 
 struct Map
 {
-	List tiles;
-	List destroyables;
-	List bullets;
+	List tilesHead;
+	List destroyablesHead;
+	List bulletsHead;
+	List tilesEnd;
+	List destroyablesEnd;
+	List bulletsEnd;
+	AVLTree *tilesMap;
 };
 
 struct Game
@@ -122,6 +131,7 @@ struct Game
 	Map underground;
 	bool playerOnGround;
 	Player* player;
+	Tower** towers;
 };
 
 extern Game GAME_INSTANCE;
