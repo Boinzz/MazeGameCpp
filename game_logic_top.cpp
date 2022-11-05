@@ -737,6 +737,7 @@ void enemyLogic(Enemy* enemy)
 
 void playerAttackLogic()
 {
+	int playerDamage = (sqrt(GAME_INSTANCE.player->level) + 1) * 100;
 	if (controller.leftDown && GAME_INSTANCE.player->tick % 10 == 0)
 	{
 		for (int i = 0; i < GAME_INSTANCE.player->level + 1; i++)
@@ -752,7 +753,7 @@ void playerAttackLogic()
 				bias = 6;
 			velX += (rand() / 32767.0 - 0.5) * bias;
 			velY += (rand() / 32767.0 - 0.5) * bias;
-			GameObject* bullet = createBullet(GAME_INSTANCE.player->posX + 24, GAME_INSTANCE.player->posY + 24, velX, velY, 100);
+			GameObject* bullet = createBullet(GAME_INSTANCE.player->posX + 24, GAME_INSTANCE.player->posY + 24, velX, velY, playerDamage);
 			if (GAME_INSTANCE.playerOnGround)
 				addToMap(&GAME_INSTANCE.ground, bullet, BULLET);
 			else
@@ -766,6 +767,7 @@ void towerLogic(Tower* tower)
 	if (tower->tick % 5 == 0 && tower->hp > 0)
 	{
 		int bulletsLeft = tower->level * sqrt(tower->level) + 1;
+		int bulletDamage = (sqrt(tower->level) + 1) * 20;
 		List currentDestroyable = GAME_INSTANCE.ground.destroyablesHead;
 		while (bulletsLeft > 0 && currentDestroyable != nullptr)
 		{
@@ -777,7 +779,7 @@ void towerLogic(Tower* tower)
 				double deltaS = sqrt(deltaX * deltaX + deltaY * deltaY);
 				double velX = deltaX * 24.0 / deltaS;
 				double velY = deltaY * 24.0 / deltaS;
-				GameObject* bullet = createBullet(tower->posX + 24, tower->posY + 24, velX, velY, 20);
+				GameObject* bullet = createBullet(tower->posX + 24, tower->posY + 24, velX, velY, bulletDamage);
 				addToMap(&GAME_INSTANCE.ground, bullet, BULLET);
 				bulletsLeft--;
 			}
